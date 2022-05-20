@@ -1,0 +1,12 @@
+import 'dotenv/config'
+import { koa } from './components/router'
+import mailjet from "node-mailjet";
+
+const port = parseInt(process.env.HTTP_PORT!) || 3000
+koa.listen(port, process.env.HTTP_HOST)
+
+for (let route of ['static-pages']) {
+	require('./routes/' + route)?.init?.()
+}
+
+console.log(`Running on port ${port}.`);
