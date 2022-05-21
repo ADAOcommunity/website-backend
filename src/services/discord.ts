@@ -9,29 +9,66 @@ const client = new Discord.Client({
   partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 
-export async function getMemberCount() {
-  await client.guilds.fetch();
-  const guild = client.guilds.cache.get("881538386857451560");
+client.login(process.env.BOT_TOKEN!);
 
-  var memberCount = 0;
-  var supporterCount = 0;
-  var builderCount = 0;
-  var coreCount = 0;
+export class DiscordCounts {
+  guild: Discord.Guild | undefined;
 
-  if (guild) {
-    const supporterRole = guild.roles.cache.get('895709292030738463');
-    const builderRole = guild.roles.cache.get('895709326549864539');
-    const coreRole = guild.roles.cache.get('922671359585292308');
-
-    if (supporterRole && builderRole && coreRole) {
-      memberCount = guild.members.cache.filter(member => !member.user.bot).size;
-      supporterCount = supporterRole.members.map(m=>m.user.tag).length;
-      builderCount = builderRole.members.map(m=>m.user.tag).length;
-      coreCount = coreRole.members.map(m=>m.user.tag).length;
-    }
+  constructor () {
+    client.guilds.fetch();
+    this.guild = client.guilds.cache.get("881538386857451560");
   }
 
-  return {members: memberCount, supporters: supporterCount, builders: builderCount, core: coreCount};
-}
+  async getMemberCount() {
 
-client.login(process.env.BOT_TOKEN!);
+    var memberCount = 0;
+
+    if (this.guild) {
+      memberCount = this.guild.members.cache.filter(member => !member.user.bot).size;
+    }
+
+    return memberCount;
+  }
+
+  async getSupporterCount() {
+    var supporterCount = 0;
+
+    if (this.guild) {
+      const supporterRole = this.guild.roles.cache.get('895709292030738463');
+
+      if (supporterRole) {
+        supporterCount = supporterRole.members.map(m=>m.user.tag).length;
+      }
+    }
+
+    return supporterCount;
+  }
+
+  async getBuilderCount() {
+    var builderCount = 0;
+
+    if (this.guild) {
+      const builderRole = this.guild.roles.cache.get('895709326549864539');
+
+      if (builderRole) {
+        builderCount = builderRole.members.map(m=>m.user.tag).length;
+      }
+    }
+
+    return builderCount;
+  }
+
+  async getCoreCount() {
+    var coreCount = 0;
+
+    if (this.guild) {
+      const coreRole = this.guild.roles.cache.get('922671359585292308');
+
+      if (coreRole) {
+        coreCount = coreRole.members.map(m=>m.user.tag).length;
+      }
+    }
+
+    return coreCount;
+  }
+}
