@@ -7,6 +7,7 @@ import * as Boom from "@hapi/boom";
 import path from "path";
 import { captureException, PublicError } from "./sentry";
 import compress from "koa-compress";
+import cors from "@koa/cors";
 
 // Useless
 export interface KoaState extends Koa.DefaultState {}
@@ -19,6 +20,8 @@ export const koa = new Koa<KoaState, KoaContext>();
 export const router = new KoaRouter<KoaState, KoaContext>({
   prefix: process.env.HTTP_URL_PREFIX,
 });
+
+koa.use(cors());
 
 koa.use(compress());
 koa.use(
